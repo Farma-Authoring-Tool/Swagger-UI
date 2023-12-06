@@ -289,7 +289,7 @@ paths:
           description: Objeto de aprendizagem não encontrado
 
   /api/professors/los/sort_pages:
-    post:
+    patch:
       summary: Reordena os objetos de aprendizagem
       security:
        - bearerAuth: []
@@ -971,7 +971,7 @@ paths:
         required: true
         schema:
           type: integer
-    post:
+    patch:
       summary: Reordena os passos de solução de um exercício
       security:
        - bearerAuth: []
@@ -1271,7 +1271,7 @@ paths:
         required: true
         schema:
           type: integer
-    post:
+    patch:
       summary: Reordena as dicas de um passo de solução
       security:
        - bearerAuth: []
