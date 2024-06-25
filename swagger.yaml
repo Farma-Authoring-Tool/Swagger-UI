@@ -2,7 +2,1015 @@ openapi: 3.0.0
 info:
   title: FARMA API
   version: 1.0.0
+
+servers:
+  - url: '{server_url}'
+    description: Link da API
+    variables:
+      server_url:
+        default: '-----------------'
+        description: Link da API
+
+tags:
+  - name: default
+  - name: view
+    description: Visualização e interação com objetos de aprendizagem
 paths:
+  /api/view/teams/{team_id}/los/{lo_id}:
+    get:
+      summary: Visualização do aluno em uma turma
+      description: Visualização do objeto de aprendizagem do aluno em uma turma
+      tags:
+        - view
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          description: O ID da turma
+          schema:
+            type: integer
+            example: 1
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Visualização do objeto de aprendizagem contendos dados do LO, paginas e progresso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewLoResource'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/professors/los/{lo_id}:
+    get:
+      summary: Visualização do professor
+      description: Visualização do objeto de aprendizagem pelo professor criador
+      tags:
+        - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Visualização do objeto de aprendizagem contendos dados do LO e paginas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewLoProfessorResource'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/guests/los/{lo_id}:
+    get:
+      summary: Visualização do visitante
+      description: Visualização do objeto de aprendizagem pelo visitante
+      tags:
+       - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Visualização do objeto de aprendizagem contendos dados do LO e paginas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewLoGuestResource'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/teams/{team_id}/los/{lo_id}/page/{page}:
+    get:
+      summary: Visualização de uma página específica pelo aluno em uma turma
+      description: Detalhe de uma página especifica do objeto de aprendizagem em uma turma
+      tags:
+       - view
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          description: O ID da turma
+          schema:
+            type: integer
+            example: 1
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: page
+          in: path
+          required: true
+          description: O número da página do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma página especifica do objeto de aprendizagem para aluno
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/StudentIntroductionPage'
+                - $ref: '#/components/schemas/StudentExercisePage'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/professor/los/{lo_id}/page/{page}:
+    get:
+      summary: Visualização de uma página específica pelo professor criador
+      description: Detalhe de uma página especifica do objeto de aprendizagem pelo professor criador
+      tags:
+       - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: page
+          in: path
+          required: true
+          description: O número da página do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma página especifica do objeto de aprendizagem para professor
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/IntroductionPage'
+                - $ref: '#/components/schemas/ExercisePage'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/guests/los/{lo_id}/page/{page}:
+    get:
+      summary: Visualização de uma página específica pelo visitante
+      description: Detalhe de uma página especifica do objeto de aprendizagem pelo visitante
+      tags:
+       - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: page
+          in: path
+          required: true
+          description: O número da página do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma página especifica do objeto de aprendizagem para visitante
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/IntroductionPage'
+                - $ref: '#/components/schemas/ExercisePage'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/teams/{team_id}/los/{lo_id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/view:
+    post:
+      summary: Visualizar uma etapa de solução de um exercício em uma turma
+      description: Registra a visualização de uma etapa de solução de um exercício por um usuário em uma turma específica.
+      tags:
+        - view
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          description: O ID da turma
+          schema:
+            type: integer
+            example: 1
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID da etapa de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '201':
+          description: Visualização da etapa de solução registrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+
+  /api/view/professors/los/{lo_id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/view:
+    post:
+      summary: Visualizar uma etapa de solução de um exercício pelo professor
+      description: Registra a visualização de uma etapa de solução de um exercício por um usuário professor.
+      tags:
+        - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID da etapa de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '201':
+          description: Visualização da etapa de solução registrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/guests/los/{lo_id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/view:
+    post:
+      summary: Visualizar uma etapa de solução de um exercício pelo visitante
+      description: Registra a visualização de uma etapa de solução de um exercício por um usuário visitante.
+      tags:
+        - view
+      parameters:
+        - name: lo_id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID da etapa de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '201':
+          description: Visualização da etapa de solução registrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 2
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-05-24T23:16:31.106-03:00"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/teams/{team_id}/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/tips/request:
+    get:
+      summary: Solicitação de dicas para resolução do passo de solução em uma turma
+      description: Solicita uma dica para resolução do passo de solução
+      tags:
+      - view
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          description: O ID da turma
+          schema:
+            type: integer
+            example: 1
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma dica para o passo de solução
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  description:
+                    type: string
+                    example: "É múltiplo de 3"
+                  number_attempts:
+                    type: integer
+                    nullable: true
+                    example: null
+                  position:
+                    type: integer
+                    example: 1718662356
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  title:
+                    type: string
+                    example: "Dica inicial"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/professors/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/tips/request:
+    get:
+      summary: Solicitação de dicas para resolução do passo de solução pelo professor
+      description: Solicita uma dica para resolução do passo de solução
+      tags:
+      - view
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma dica para o passo de solução
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  description:
+                    type: string
+                    example: "É múltiplo de 3"
+                  number_attempts:
+                    type: integer
+                    nullable: true
+                    example: null
+                  position:
+                    type: integer
+                    example: 1718662356
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  title:
+                    type: string
+                    example: "Dica inicial"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/guests/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/tips/request:
+    get:
+      summary: Solicitação de dicas para resolução do passo de solução pelo visitante
+      description: Solicita uma dica para resolução do passo de solução
+      tags:
+      - view
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalhe de uma dica para o passo de solução
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  description:
+                    type: string
+                    example: "É múltiplo de 3"
+                  number_attempts:
+                    type: integer
+                    nullable: true
+                    example: null
+                  position:
+                    type: integer
+                    example: 1718662356
+                  solution_step_id:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2024-06-17T19:12:36.450-03:00"
+                  title:
+                    type: string
+                    example: "Dica inicial"
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/teams/{team_id}/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/answer:
+    post:
+      summary: Submete uma resposta para o passo de solução em uma turma
+      description: Submete uma resposta específica para um passo de solução de um exercício
+      tags:
+        - view
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          description: O ID da turma
+          schema:
+            type: integer
+            example: 1
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  example: "x"
+      responses:
+        '200':
+          description: Resposta submetida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: boolean
+                    example: true
+                  response_history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        user_id:
+                          type: integer
+                          example: 2
+                        team_id:
+                          type: integer
+                          example: 1
+                        response:
+                          type: string
+                          example: "x"
+                        correct:
+                          type: boolean
+                          example: true
+                        attempt_number:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                  tips_viewed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        description:
+                          type: string
+                          example: "É multiplo de 3"
+                        number_attempts:
+                          type: integer
+                          nullable: true
+                          example: null
+                        position:
+                          type: integer
+                          example: 1718662356
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        title:
+                          type: string
+                          example: "Dica inicial"
+                  tip_available:
+                    type: boolean
+                    example: true
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/professors/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/answer:
+    post:
+      summary: Submete uma resposta para o passo de solução pelo professor
+      description: Submete uma resposta específica para um passo de solução de um exercício
+      tags:
+        - view
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  example: "x"
+      responses:
+        '200':
+          description: Resposta submetida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: boolean
+                    example: true
+                  response_history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        user_id:
+                          type: integer
+                          example: 2
+                        team_id:
+                          type: integer
+                          example: 1
+                        response:
+                          type: string
+                          example: "x"
+                        correct:
+                          type: boolean
+                          example: true
+                        attempt_number:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                  tips_viewed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        description:
+                          type: string
+                          example: "É multiplo de 3"
+                        number_attempts:
+                          type: integer
+                          nullable: true
+                          example: null
+                        position:
+                          type: integer
+                          example: 1718662356
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        title:
+                          type: string
+                          example: "Dica inicial"
+                  tip_available:
+                    type: boolean
+                    example: true
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+  /api/view/guests/los/{id}/exercises/{exercise_id}/solution_steps/{solution_step_id}/answer:
+    post:
+      summary: Submete uma resposta para o passo de solução pelo visitante
+      description: Submete uma resposta específica para um passo de solução de um exercício
+      tags:
+        - view
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: O ID do objeto de aprendizagem
+          schema:
+            type: integer
+            example: 1
+        - name: exercise_id
+          in: path
+          required: true
+          description: O ID do exercício
+          schema:
+            type: integer
+            example: 1
+        - name: solution_step_id
+          in: path
+          required: true
+          description: O ID do passo de solução
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  example: "x"
+      responses:
+        '200':
+          description: Resposta submetida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correct:
+                    type: boolean
+                    example: true
+                  response_history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        user_id:
+                          type: integer
+                          example: 2
+                        team_id:
+                          type: integer
+                          example: 1
+                        response:
+                          type: string
+                          example: "x"
+                        correct:
+                          type: boolean
+                          example: true
+                        attempt_number:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-18T22:55:56.602-03:00"
+                  tips_viewed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        description:
+                          type: string
+                          example: "É multiplo de 3"
+                        number_attempts:
+                          type: integer
+                          nullable: true
+                          example: null
+                        position:
+                          type: integer
+                          example: 1718662356
+                        solution_step_id:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: "2024-06-17T19:12:36.450-03:00"
+                        title:
+                          type: string
+                          example: "Dica inicial"
+                  tip_available:
+                    type: boolean
+                    example: true
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/json:
+              example:
+                message: "Recurso Objeto de Aprendizagem não encontrado!"
+
+
   /login:
     post:
       summary: Realiza o login do usuário
@@ -1301,14 +2309,13 @@ paths:
         '404':
           description: Passo de solução não encontrado
 
-
 components:
   securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-        description: Bearer TOKEN
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer TOKEN
 
   schemas:
     Lo:
@@ -1331,7 +2338,7 @@ components:
           description: Imagem representativa do objeto de aprendizagem
         exercises_count:
           type: integer
-          description: Cache de quantos exercíos existem nesse objeto de aprendizagem
+          description: Cache de quantos exercícios existem nesse objeto de aprendizagem
         introductions_count:
           type: integer
           description: Cache de quantas introduções existem nesse objeto de aprendizagem
@@ -1341,7 +2348,7 @@ components:
         updated_at:
           type: string
           format: date-time
-  
+
     Introduction:
       type: object
       required:
@@ -1369,7 +2376,7 @@ components:
         updated_at:
           type: string
           format: date-time
-    
+
     Exercise:
       type: object
       required:
@@ -1400,7 +2407,7 @@ components:
         updated_at:
           type: string
           format: date-time
-          
+
     SolutionStep:
       type: object
       required:
@@ -1438,7 +2445,7 @@ components:
         updated_at:
           type: string
           format: date-time
-          
+
     Tip:
       type: object
       required:
@@ -1462,7 +2469,7 @@ components:
         updated_at:
           type: string
           format: date-time
-    
+
     User:
       type: object
       properties:
@@ -1480,4 +2487,186 @@ components:
           format: date-time
         jti:
           type: string
- 
+
+    ViewLoResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Objeto de Aprendizagem
+        description:
+          type: string
+          example: Rem repellendus commodi. Adipisci voluptas numquam. Dolorem exercitationem maiores.
+        pages:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/StudentIntroductionPage'
+              - $ref: '#/components/schemas/StudentExercisePage'
+        page:
+          $ref: '#/components/schemas/StudentExercisePage'
+        progress:
+          $ref: '#/components/schemas/Progress'
+
+    StudentExercisePage:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Exercise
+        title:
+          type: string
+          example: Exerciicio 1
+        position:
+          type: integer
+          example: 1716240579
+        description:
+          type: string
+          example: Fugit modi alias. Accusantium a expedita. In laudantium totam.
+        status:
+          type: string
+          example: viewed
+        solution_steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/SolutionStepStudentView'
+
+    StudentIntroductionPage:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Introduction
+        title:
+          type: string
+          example: Introdução 1
+        position:
+          type: integer
+          example: 1716240579
+        description:
+          type: string
+          example: Fugit modi alias. Accusantium a expedita. In laudantium totam.
+        status:
+          type: string
+          example: viewed
+
+    SolutionStepStudentView:
+      type: object
+      properties:
+        position:
+          type: integer
+          example: 1716240579
+        status:
+          type: string
+          example: viewed
+        attempts:
+          type: integer
+          example: 6
+
+    Progress:
+      type: object
+      properties:
+        completed:
+          type: integer
+          example: 75
+        explored:
+          type: integer
+          example: 80
+        unexplored:
+          type: integer
+          example: 20
+
+    ViewLoProfessorResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Objeto de Aprendizagem
+        description:
+          type: string
+          example: Rem repellendus commodi. Adipisci voluptas numquam. Dolorem exercitationem maiores.
+        pages:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/IntroductionPage'
+              - $ref: '#/components/schemas/ExercisePage'
+        page:
+          $ref: '#/components/schemas/IntroductionPage'
+
+    ViewLoGuestResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Objeto de Aprendizagem
+        description:
+          type: string
+          example: Rem repellendus commodi. Adipisci voluptas numquam. Dolorem exercitationem maiores.
+        pages:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/IntroductionPage'
+              - $ref: '#/components/schemas/ExercisePage'
+        page:
+          $ref: '#/components/schemas/IntroductionPage'
+
+    ExercisePage:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Exercise
+        title:
+          type: string
+          example: Exerciicio 1
+        position:
+          type: integer
+          example: 1716240579
+        description:
+          type: string
+          example: Fugit modi alias. Accusantium a expedita. In laudantium totam.
+        solution_steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/SolutionStepView'
+
+    IntroductionPage:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Introduction
+        title:
+          type: string
+          example: Introdução 1
+        position:
+          type: integer
+          example: 1716240579
+        description:
+          type: string
+          example: Fugit modi alias. Accusantium a expedita. In laudantium totam.
+
+    SolutionStepView:
+      type: object
+      properties:
+        position:
+          type: integer
+          example: 1716240579
+        title:
+          type: string
+          example: Passo de solução 1
+        description:
+          type: string
+          example:  Fugit modi alias. Accusantium a expedita. In laudantium totam.
+
